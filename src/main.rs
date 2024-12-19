@@ -2,6 +2,7 @@ mod game;
 mod paddle;
 mod ball;
 mod utils;
+mod robot;
 
 use ggez::{ContextBuilder, GameResult};
 use game::Game;
