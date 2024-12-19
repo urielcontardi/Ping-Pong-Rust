@@ -2,6 +2,7 @@ use ggez::{event, graphics, Context, GameResult};
 use ggez::graphics::Color;
 use ggez::input::keyboard::{self, KeyCode}; // Adicionado aqui
 use crate::paddle::Paddle;
+use crate::ball::Ball;
 
 const PADDLE_WIDTH: f32 = 10.0;
 const PADDLE_HEIGHT: f32 = 100.0;
@@ -13,6 +14,7 @@ const BALL_SPEED_Y: f32 = 150.0;
 pub struct Game {
     paddle1: Paddle,
     paddle2: Paddle,
+    ball: Ball,
     screen_width: f32,
     screen_height: f32,
 }
@@ -45,6 +47,7 @@ impl Game {
         Self {
             paddle1,
             paddle2,
+            ball,
             screen_width,
             screen_height,
         }
@@ -62,7 +65,13 @@ impl event::EventHandler for Game {
         if keyboard::is_key_pressed(ctx, KeyCode::Down) {
             self.paddle1.move_down(delta, self.screen_height);
         }
-
+    
+        // Atualiza a posição da bola
+        self.ball.update(delta);
+    
+        // Detecta colisões da bola com as bordas
+        self.ball.check_collision(self.screen_width, self.screen_height);
+    
         Ok(())
     }
 
@@ -72,7 +81,10 @@ impl event::EventHandler for Game {
         // Desenha as raquetes
         self.paddle1.draw(ctx)?;
         self.paddle2.draw(ctx)?;
-
+    
+        // Desenha a bola
+        self.ball.draw(ctx)?;
+    
         graphics::present(ctx)?;
         Ok(())
     }
