@@ -3,6 +3,13 @@ use ggez::graphics::Color;
 use ggez::input::keyboard::{self, KeyCode}; // Adicionado aqui
 use crate::paddle::Paddle;
 
+const PADDLE_WIDTH: f32 = 10.0;
+const PADDLE_HEIGHT: f32 = 100.0;
+const PADDLE_SPEED: f32 = 300.0;
+const BALL_RADIUS: f32 = 10.0;
+const BALL_SPEED_X: f32 = 200.0;
+const BALL_SPEED_Y: f32 = 150.0;
+
 pub struct Game {
     paddle1: Paddle,
     paddle2: Paddle,
@@ -12,10 +19,32 @@ pub struct Game {
 
 impl Game {
     pub fn new(ctx: &mut Context) -> Self {
+        // Obtém as dimensões da tela
         let (screen_width, screen_height) = graphics::drawable_size(ctx);
+
+        // Configura as raquetes
+        let paddle1 = Paddle::new(30.0, screen_height / 2.0 - PADDLE_HEIGHT / 2.0, PADDLE_WIDTH, PADDLE_HEIGHT, PADDLE_SPEED);
+        let paddle2 = Paddle::new(
+            screen_width - 40.0,
+            screen_height / 2.0 - PADDLE_HEIGHT / 2.0,
+            PADDLE_WIDTH,
+            PADDLE_HEIGHT,
+            PADDLE_SPEED,
+        );
+
+        // Configura a bola
+        let ball = Ball::new(
+            screen_width / 2.0,
+            screen_height / 2.0,
+            BALL_RADIUS,
+            BALL_SPEED_X,
+            BALL_SPEED_Y,
+        );
+
+        // Retorna a instância de Game
         Self {
-            paddle1: Paddle::new(30.0, screen_height / 2.0 - 50.0, 10.0, 100.0, 300.0),
-            paddle2: Paddle::new(screen_width - 40.0, screen_height / 2.0 - 50.0, 10.0, 100.0, 300.0),
+            paddle1,
+            paddle2,
             screen_width,
             screen_height,
         }
