@@ -71,6 +71,16 @@ impl event::EventHandler for Game {
     
         // Detecta colisões da bola com as bordas
         self.ball.check_collision(self.screen_width, self.screen_height);
+
+        // Detecta colisão com a raquete do jogador 1
+        if self.ball.check_paddle_collision(&self.paddle1) {
+            self.ball.velocity_x = self.ball.velocity_x.abs(); // Rebata para a direita
+        }
+    
+        // Detecta colisão com a raquete do jogador 2
+        if self.ball.check_paddle_collision(&self.paddle2) {
+            self.ball.velocity_x = -self.ball.velocity_x.abs(); // Rebata para a esquerda
+        }    
     
         Ok(())
     }

@@ -1,5 +1,6 @@
 use ggez::graphics::{self, Color, DrawMode, DrawParam, Mesh};
 use ggez::{Context, GameResult};
+use crate::paddle::Paddle;
 
 pub struct Ball {
     pub x: f32,
@@ -38,6 +39,29 @@ impl Ball {
         if self.x - self.radius <= 0.0 || self.x + self.radius >= screen_width {
             self.velocity_x = -self.velocity_x;
         }
+    }
+
+    pub fn check_paddle_collision(&mut self, paddle: &Paddle) -> bool {
+        // Verifica colisão horizontal
+        let ball_left = self.x - self.radius;
+        let ball_right = self.x + self.radius;
+        let paddle_left = paddle.x;
+        let paddle_right = paddle.x + paddle.width;
+
+        let horizontal_collision =
+            ball_right >= paddle_left && ball_left <= paddle_right;
+
+        // Verifica colisão vertical
+        let ball_top = self.y - self.radius;
+        let ball_bottom = self.y + self.radius;
+        let paddle_top = paddle.y;
+        let paddle_bottom = paddle.y + paddle.height;
+
+        let vertical_collision =
+            ball_bottom >= paddle_top && ball_top <= paddle_bottom;
+
+        // Retorna true se houver colisão
+        horizontal_collision && vertical_collision
     }
 
     // Desenha a bola na tela
